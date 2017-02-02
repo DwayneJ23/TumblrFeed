@@ -38,8 +38,6 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
             with: request as URLRequest,
             completionHandler: { (data, response, error) in
                 
-                // Hide HUD once the network request comes back (must be done on main UI thread)
-                MBProgressHUD.hide(for: self.view, animated: true)
                 
                 if let data = data {
                     if let responseDictionary = try! JSONSerialization.jsonObject(
@@ -52,7 +50,11 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         // This is where you will store the returned array of posts in your posts property
                         self.posts = responseFieldDictionary["posts"] as! [NSDictionary]
+                        
                         self.photosView.reloadData()
+                        
+                        // Hide HUD once the network request comes back (must be done on main UI thread)
+                        MBProgressHUD.hide(for: self.view, animated: true)
                     }
                 }
         });
@@ -76,16 +78,18 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
         // To pull out a single post from our posts array
         let post = posts[indexPath.row]
         
-        
-        let photos = post.value(forKeyPath: "photos") as? [NSDictionary]
-        
-        let imageUrlString = photos?[0].value(forKeyPath: "original_size.url") as? String
-        let imageUrl = URL(string: imageUrlString!)!
-        cell.imagePhotoCell.setImageWith(imageUrl)
-
-
-        //cell.textLabel?.text = "This is row \(indexPath.row)"
-        
+        if let photos = post.value(forKeyPath: "photos") as? [NSDictionary] {
+            
+            // Get the original size image url
+            let imageUrlString = photos[0].value(forKeyPath: "original_size.url") as? String
+            
+            // Convert imageUrlString to NSURL so long as its not nil
+            if let imageUrl = URL(string: imageUrlString!) {
+                
+                // Set the image view in the cell so long as nothing is ni
+                cell.imagePhotoCell.setImageWith(imageUrl)
+            }
+        }
         
         return cell
     }
