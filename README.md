@@ -3,7 +3,7 @@
 # Lab 1 - *TumblrFeed*
 
 This exercise is to practice using table views by building a simple Tumblr app.
-TumblrFeed is a social media app using the [The Tumblt API](https://www.tumblr.com/docs/en/api/v2).
+TumblrFeed is a social media app using the [The Tumblr API](https://www.tumblr.com/docs/en/api/v2).
 
 Time spent: 2 hours spent in total
 
